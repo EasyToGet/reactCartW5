@@ -71,6 +71,28 @@ function App() {
     }
   };
 
+  const removeCart = async () => {
+    try {
+      await axios.delete(`${BASE_URL}/v2/api/${API_PATH}/carts`)
+
+      getCart();
+    } catch (error) {
+      alert('刪除購物車失敗: ', error.response.data.message);
+    }
+  };
+
+  const removeCartItem = async (product_id) => {
+    try {
+      await axios.delete(`${BASE_URL}/v2/api/${API_PATH}/cart/${product_id}`)
+
+      getCart();
+    } catch (error) {
+      alert('刪除購物車失敗: ', error.response.data.message);
+    }
+  };
+
+
+
   return (
     <div id="app">
       <div className="container">
@@ -194,7 +216,13 @@ function App() {
           {cart.carts?.length > 0 && (
             <div>
               <div className="text-end">
-                <button className="btn btn-outline-danger" type="button">清空購物車</button>
+                <button 
+                  className="btn btn-outline-danger" 
+                  type="button"
+                  onClick={removeCart}
+                >
+                  清空購物車
+                </button>
               </div>
               <table className="table align-middle">
                 <thead>
@@ -209,7 +237,11 @@ function App() {
                   {cart.carts?.map((cartItem) => (
                     <tr key={cartItem.id}>
                       <td>
-                        <button type="button" className="btn btn-outline-danger btn-sm">
+                        <button 
+                          type="button" 
+                          className="btn btn-outline-danger btn-sm"
+                          onClick={() => removeCartItem(cartItem.id)}
+                        >
                           x
                         </button>
                       </td>
