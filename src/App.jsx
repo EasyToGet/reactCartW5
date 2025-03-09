@@ -81,15 +81,32 @@ function App() {
     }
   };
 
-  const removeCartItem = async (product_id) => {
+  const removeCartItem = async (cartItem_id) => {
     try {
-      await axios.delete(`${BASE_URL}/v2/api/${API_PATH}/cart/${product_id}`)
+      await axios.delete(`${BASE_URL}/v2/api/${API_PATH}/cart/${cartItem_id}`)
 
       getCart();
     } catch (error) {
-      alert('刪除購物車失敗: ', error.response.data.message);
+      alert('刪除購物車品項失敗: ', error.response.data.message);
     }
   };
+
+  const updateCartItem = async (cartItem_id, product_id, qty) => {
+    try {
+      await axios.put(`${BASE_URL}/v2/api/${API_PATH}/cart/${cartItem_id}`, {
+        data: {
+          product_id,
+          qty: Number(qty)
+        }
+      });
+
+      getCart();
+    } catch (error) {
+      alert('更新購物車品項失敗: ', error.response.data.message);
+    }
+  };
+
+
 
 
 
@@ -252,6 +269,8 @@ function App() {
                             <button
                               type="button"
                               className="btn btn-outline-dark btn-sm"
+                              onClick={() => updateCartItem(cartItem.id, cartItem.product_id, cartItem.qty - 1)}
+                              disabled={cartItem.qty === 1}
                             >
                               -
                             </button>
@@ -262,6 +281,7 @@ function App() {
                             <button
                               type="button"
                               className="btn btn-outline-dark btn-sm"
+                              onClick={() => updateCartItem(cartItem.id, cartItem.product_id, cartItem.qty + 1)}
                             >
                               +
                             </button>
